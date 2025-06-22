@@ -15,7 +15,7 @@ export const schemaLogin = z.object({
         .string({
             message: 'La contraseña es obligatorio'
         })
-        .min(1, {
-            message: 'La contraseña es obligatorio'
+        .min(6, {
+            message: 'La contraseña debe tener al menos 6 caracteres'
         })
 })
