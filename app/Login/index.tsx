@@ -1,4 +1,4 @@
-import { Redirect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import Toast from 'react-native-toast-message';
@@ -6,9 +6,10 @@ import { schemaLogin } from "../schemas/user";
 import users from '../stores/usuarios.json';
 
 export default function LoginPage() {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    
+    const router = useRouter();
+    const [email, setEmail] = useState('admin@example.com')
+    const [password, setPassword] = useState('th1s1sadm1n')
+    // { "email": "admin@example.com", "password": "th1s1sadm1n", "userId": 0 },
     
 
     const onChangeEmail = (text: string) => {
@@ -69,9 +70,10 @@ export default function LoginPage() {
             topOffset: 30,
             bottomOffset: 40,
         })
-        console.log('user', user)
+        console.log('llego despues del toat', user)
 
-        return <Redirect href="/Home" />;
+        
+        router.replace('/Home')
             
     }   
     return (
