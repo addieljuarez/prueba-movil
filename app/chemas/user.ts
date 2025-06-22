@@ -8,7 +8,9 @@ export const schemaLogin = z.object({
         .min(1, {
             message: 'El Correo es obligatorio'
         })
-        .email(),
+        .email({
+            message: 'El formato del correo es incorrecto'
+        }),
     password: z
         .string({
             message: 'La contraseña es obligatorio'

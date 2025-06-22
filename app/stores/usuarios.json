@@ -1,0 +1,13 @@
+[
+    { "email": "admin@example.com", "password": "th1s1sadm1n", "userId": 0 },
+    { "email": "user1@example.com", "password": "password123", "userId": 1 },
+    { "email": "user2@example.com", "password": "pass456", "userId": 2 },
+    { "email": "user3@example.com", "password": "secret789", "userId": 3 },
+    { "email": "user4@example.com", "password": "mypassword", "userId": 4 },
+    { "email": "user5@example.com", "password": "letmein2024", "userId": 5 },
+    { "email": "user6@example.com", "password": "op3ns3s4me", "userId": 6 },
+    { "email": "user7@example.com", "password": "p4ssw0rd", "userId": 7 },
+    { "email": "user8@example.com", "password": "k3y2open", "userId": 8 },
+    { "email": "user9@example.com", "password": "n3in3in3in", "userId": 9 },
+    { "email": "user10@example.com", "password": "us3r10pswd", "userId": 10 }
+]

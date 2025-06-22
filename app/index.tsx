@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import { schemaLogin } from "./chemas/user";
+import users from './stores/usuarios.json';
 
 export default function TestWindowPage1() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    
     
 
     const onChangeEmail = (text: string) => {
@@ -24,7 +27,27 @@ export default function TestWindowPage1() {
 
         const userValidation = schemaLogin.safeParse(dataValidation)
 
-        console.log('userValidation', userValidation) 
+        // console.log('userValidation', userValidation) 
+        if (!userValidation.success) {
+            const errors = userValidation.error?.errors.map((error) => {
+                // return {
+                //     message: error.message,
+                // }
+                console.log('users', users)
+                Toast.show({
+                    type: 'error',
+                    text1: error.message,
+                    position: 'top',
+                    visibilityTime: 3000,
+                    autoHide: true,
+                    topOffset: 30,
+                    bottomOffset: 40,
+                })
+            })
+            console.log('errors', errors)
+            return
+        }
+            
     }    
   return (
     <SafeAreaProvider>
@@ -55,7 +78,7 @@ export default function TestWindowPage1() {
                     onPress={login}
                 />
             </View>
-            
+            <Toast />
         </SafeAreaView>
     </SafeAreaProvider>
     
