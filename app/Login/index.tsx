@@ -70,8 +70,6 @@ export default function LoginPage() {
             topOffset: 30,
             bottomOffset: 40,
         })
-        console.log('llego despues del toat', user)
-
         
         router.replace('/Home')
             

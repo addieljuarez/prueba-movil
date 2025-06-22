@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+import Toast from 'react-native-toast-message';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -23,8 +24,10 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
+        <Stack.Screen name="Home/index" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
+      <Toast />
     </ThemeProvider>
   );
 }

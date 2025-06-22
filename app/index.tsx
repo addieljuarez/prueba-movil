@@ -1,24 +1,29 @@
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Toast from 'react-native-toast-message';
+// import Toast from 'react-native-toast-message';
+// import HomePage from './Home';
+import SafeAreaComponent from '@/components/ui/SafeAreaComponent';
 import LoginPage from './Login';
 
 
 export default function TestWindowPage1() {
      
   return (
-    <SafeAreaProvider>
-        <SafeAreaView 
-        style={{
-            flex: 1,
-            borderColor: 'blue',
-            borderWidth: 5,
-    }}>
+    // <SafeAreaProvider>
+        <SafeAreaComponent>
+            <LoginPage />
+        </SafeAreaComponent>
+        // {/* <SafeAreaView 
+        // style={{
+        //     flex: 1,
+        //     borderColor: 'blue',
+        //     borderWidth: 5,
+        // }}> */}
             
-        <LoginPage />
+        
+        // {/* <HomePage /> */}
 
-        <Toast />
-        </SafeAreaView>
-    </SafeAreaProvider>
+        // {/* <Toast /> */}
+        // {/* </SafeAreaView> */}
+    // </SafeAreaProvider>
     
   );
 }
