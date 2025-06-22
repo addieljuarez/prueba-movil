@@ -19,3 +19,21 @@ export const schemaLogin = z.object({
             message: 'La contraseña debe tener al menos 6 caracteres'
         })
 })
+
+
+
+export const schemaStateStore = z.object({
+    isLoggedIn: z.boolean(),
+    user: z.object({}).catchall(z.any()).nullable().optional(),
+    isLoading: z.boolean().optional(),
+})
+
+export const schemaActionStore = z.object({
+    setIsLoggedIn: z.function().args(z.boolean()).returns(z.void()).optional(),
+    setUser: z.function().args(z.object({}).catchall(z.any())).returns(z.void()).optional(),
+    logout: z.function().returns(z.void()).optional(),
+    setIsLoading: z.function().args(z.boolean()).returns(z.void()).optional()
+})
+
+export type StateStore = z.infer<typeof schemaStateStore>
+export type ActionStore = z.infer<typeof schemaActionStore>

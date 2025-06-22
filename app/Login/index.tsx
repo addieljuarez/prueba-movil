@@ -1,17 +1,19 @@
+import useStoreLogin from '@/app/Stores/useStore';
 import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Button, Text, TextInput, View } from "react-native";
 import Toast from 'react-native-toast-message';
-import { schemaLogin } from "../schemas/user";
-import users from '../stores/usuarios.json';
+import { schemaLogin } from "../Schemas/user";
+import users from '../Stores/usuarios.json';
+import StyleLogin from './index.styles';
 
 export default function LoginPage() {
     const router = useRouter();
     const [email, setEmail] = useState('admin@example.com')
     const [password, setPassword] = useState('th1s1sadm1n')
-    // { "email": "admin@example.com", "password": "th1s1sadm1n", "userId": 0 },
-    
 
+    const updateLogin = useStoreLogin((state) => state.setIsLoggedIn)
+    // const updateLogin = useStoreLogin.getState().setIsLoggedIn
     const onChangeEmail = (text: string) => {
         setEmail(text)
     }
@@ -28,26 +30,21 @@ export default function LoginPage() {
 
         const userValidation = schemaLogin.safeParse(dataValidation)
 
-        // console.log('userValidation', userValidation) 
         if (!userValidation.success) {
-            const errors = userValidation.error?.errors.map((error) => {
-                // return {
-                //     message: error.message,
-                // }
-                // console.log('users', users)
+            userValidation.error?.errors.map((error) => {
                 Toast.show({
                     type: 'error',
                     text1: error.message,
                     position: 'top',
                     visibilityTime: 3000,
                     autoHide: true,
-                    topOffset: 30,
+                    topOffset: 50,
                     bottomOffset: 40,
                 })
             })
-            console.log('errors', errors)
             return
         }
+
         const user = users.find((user) => user.email === email && user.password === password)
         if (!user) {
             Toast.show({
@@ -56,7 +53,7 @@ export default function LoginPage() {
                 position: 'top',
                 visibilityTime: 3000,
                 autoHide: true,
-                topOffset: 30,
+                topOffset: 50,
                 bottomOffset: 40,
             })
             return
@@ -67,30 +64,41 @@ export default function LoginPage() {
             position: 'top',
             visibilityTime: 3000,
             autoHide: true,
-            topOffset: 30,
+            topOffset: 50,
             bottomOffset: 40,
-        })
+        });
         
-        router.replace('/Home')
-            
+        // useStoreLogin.getState().setIsLoggedIn(true);
+        // useStoreLogin.subscribe((state) => {
+        //     if (state.isLoggedIn) {
+        //         router.replace('/Home');
+        //     }
+        // });
+        router.replace('/Home');
+
+        updateLogin(true);
+        // (useStoreLogin.getState() as { setIsLoggedIn: (loggedIn: boolean) => void }).setIsLoggedIn(true)
+        // userStore.setState({
+        //     isLoggedIn: true,
+        //     user: user,
+        // })
+        // updateLogin.persist.rehydrate() // Ensure the store is persisted after login
+        // userStore.setState({ token: 'fake
+        // userStore.getState().setIsLoggedIn(true);
+        // useStoreLogin.getState().setUser(user);
+        // useStoreLogin.persist.rehydrate()// Ensure the store is persisted after login
+
+        
+
+        return  
     }   
     return (
-        <View style={{ flex: 1, alignItems: 'center',justifyContent: 'center', borderColor: 'red', borderWidth:1 }}>
+        <View style={StyleLogin.mainContainer}>
             <Text>Organizador de tareas</Text>
-            <TextInput style={{
-                    height: 40,
-                    margin: 12,
-                    borderWidth: 1,
-                    padding: 10,
-                }}
+            <TextInput style={StyleLogin.inputForm}
                 onChangeText={onChangeEmail}
                 value={email}/>
-            <TextInput style={{
-                    height: 40,
-                    margin: 12,
-                    borderWidth: 1,
-                    padding: 10,
-                }}
+            <TextInput style={StyleLogin.inputForm}
                 secureTextEntry={true}
                 onChangeText={onChangePass}
                 value={password}/>

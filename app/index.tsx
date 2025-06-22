@@ -1,29 +1,19 @@
-// import Toast from 'react-native-toast-message';
-// import HomePage from './Home';
-import SafeAreaComponent from '@/components/ui/SafeAreaComponent';
+import SafeAreaComponent from '@/app/Components/SafeAreaComponent';
+import { Redirect } from 'expo-router';
 import LoginPage from './Login';
+import useStoreLogin from './Stores/useStore';
 
+export default function Index() {
+    const isLoggedIn = useStoreLogin((state) => state.isLoggedIn);
+    console.log('User logged in:', isLoggedIn);
 
-export default function TestWindowPage1() {
-     
-  return (
-    // <SafeAreaProvider>
+    if (isLoggedIn) {
+        return <Redirect href="/Home" />;
+    }
+        
+    return (
         <SafeAreaComponent>
             <LoginPage />
         </SafeAreaComponent>
-        // {/* <SafeAreaView 
-        // style={{
-        //     flex: 1,
-        //     borderColor: 'blue',
-        //     borderWidth: 5,
-        // }}> */}
-            
-        
-        // {/* <HomePage /> */}
-
-        // {/* <Toast /> */}
-        // {/* </SafeAreaView> */}
-    // </SafeAreaProvider>
-    
-  );
+    );
 }
