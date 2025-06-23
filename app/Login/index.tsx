@@ -13,6 +13,8 @@ export default function LoginPage() {
     const [password, setPassword] = useState('th1s1sadm1n')
 
     const updateLogin = useStoreLogin((state) => state.setIsLoggedIn)
+    const setUser = useStoreLogin(state => state.setUser)
+
     const onChangeEmail = (text: string) => {
         setEmail(text)
     }
@@ -67,8 +69,9 @@ export default function LoginPage() {
             bottomOffset: 40,
         });
 
-        router.replace('/Home');
+        router.replace('/Home/ListTask');
         updateLogin(true);
+        setUser(user)
 
         return  
     }   

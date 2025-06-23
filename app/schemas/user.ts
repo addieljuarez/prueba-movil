@@ -35,5 +35,12 @@ export const schemaActionStore = z.object({
     setIsLoading: z.function().args(z.boolean()).returns(z.void()).optional()
 })
 
+export const schemaUser = z.object({
+    email: z.string(), 
+    password: z.string(), 
+    userId: z.number() ,
+})
+
 export type StateStore = z.infer<typeof schemaStateStore>
 export type ActionStore = z.infer<typeof schemaActionStore>
+export type User = z.infer<typeof schemaUser>

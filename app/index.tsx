@@ -7,7 +7,7 @@ export default function Index() {
     const isLoggedIn = useStoreLogin((state) => state.isLoggedIn);
 
     if (isLoggedIn) {
-        return <Redirect href="/Home" />;
+        return <Redirect href="/Home/ListTask" />;
     }
         
     return (

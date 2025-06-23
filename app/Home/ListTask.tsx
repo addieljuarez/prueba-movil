@@ -1,18 +1,25 @@
+import { useRouter } from 'expo-router'
 import { useEffect, useState } from 'react'
-import { ScrollView, Text, TextInput, View } from 'react-native'
+import { Button, ScrollView, Text, TextInput, View } from 'react-native'
 import { getTasks } from '../API'
 import SafeAreaComponent from '../Components/SafeAreaComponent'
 import { Task } from '../Schemas/tasks'
+import useStoreLogin from '../Stores/useStore'
+
 
 
 export default function HomePage(){
-
+    
+    const router = useRouter();
     const limitTask = 5
+    const user = useStoreLogin(state => state.user)
+    console.log('user', user)
     const [tasks, setTasks] = useState({
         success: false,
         data: [],
         message: ''
     })
+    
     useEffect(() => {
         const fetchTasks = async () => {
             const getAllTasks = await getTasks(limitTask)
@@ -22,6 +29,9 @@ export default function HomePage(){
         fetchTasks()
     }, [])
     const onChangeSearch = (text: string) => {
+        // - **Funcionalidad de Filtro**: 
+        // Proporciona un botón que permita alternar la vista entre tareas con ID par o impar, 
+        // filtrar tareas por ID de usuarios, y en caso de ser usuario  admin (userID: 0) mostrar todas las tareas.
         if (text.length > 0) {
             const filteredTasks = tasks.data.filter((task: Task) =>
                 task.title.toLowerCase().includes(text.toLowerCase())
@@ -41,6 +51,10 @@ export default function HomePage(){
             fetchTasks()
         }
     }
+
+    const addNewTask = () => {
+        router.push('/Home/AddTask')
+    }   
     return (
         <>
             <SafeAreaComponent>
@@ -52,6 +66,17 @@ export default function HomePage(){
                         onChangeText={onChangeSearch}
                     />
                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Buscar Tareas</Text>
+                    <Button
+                        title="Agregar Tarea"
+                        // onPress={() => {
+                        //     // Aquí puedes agregar la lógica para agregar una nueva tarea
+                        //     console.log('Agregar Tarea presionado')
+                        // }}
+                        onPress={addNewTask}
+                        color="#007BFF"
+                        accessibilityLabel="Agregar Tarea"
+                        testID="add-task-button"
+                    />
                 </View>
                 <ScrollView style={{ flex: 1, padding: 10 }}>
                     {tasks.success ? (
