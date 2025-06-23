@@ -13,29 +13,34 @@ export default function HomePage(){
     const router = useRouter();
     const limitTask = 30
     const user = useStoreLogin(state => state.user)
-    console.log('user', user)
+    // console.log('user', user)
     const [tasks, setTasks] = useState({
         success: false,
         data: [],
         message: ''
     })
+    const evenOrOdd = () => {
+        console.log('evenOrOdd')
+    }
     
     useEffect(() => {
         const fetchTasks = async () => {
             const getAllTasks = await getTasks(limitTask)
-            console.log('getAllTasks', getAllTasks)
+            // console.log('getAllTasks', getAllTasks)
             // Si el usuario es admin (userID: 0), se obtienen todas las tareas
             if (user && user.userId === 0) {
                 // Aquí podrías implementar la lógica para obtener todas las tareas si el usuario es admin
                 setTasks(getAllTasks)
             }else {
                 // Si el usuario no es admin, se obtienen las tareas limitadas
+                // console.log('user?.userId', user?.userId)
+                // console.log('getAllTasks.data', getAllTasks.data)
                 getAllTasks.data = getAllTasks.data.filter((task: Task) => task.userId === user?.userId)
                 setTasks(getAllTasks)
             }
         }
         fetchTasks()
-    }, [])
+    }, [user])
     const onChangeSearch = (text: string) => {
         // - **Funcionalidad de Filtro**: 
         // Proporciona un botón que permita alternar la vista entre tareas con ID par o impar, 
@@ -46,22 +51,51 @@ export default function HomePage(){
             // Si el input está vacío, volvemos a cargar todas las tareas
             const fetchTasks = async () => {
                 const getAllTasks = await getTasks(limitTask)
+                // setTasks(getAllTasks)
+
+                if (user && user.userId === 0) {
+                // Aquí podrías implementar la lógica para obtener todas las tareas si el usuario es admin
                 setTasks(getAllTasks)
+                }else {
+                    // Si el usuario no es admin, se obtienen las tareas limitadas
+                    // console.log('user?.userId', user?.userId)
+                    // console.log('getAllTasks.data', getAllTasks.data)
+                    getAllTasks.data = getAllTasks.data.filter((task: Task) => task.userId === user?.userId)
+                    setTasks(getAllTasks)
+                }
             }
             fetchTasks()
             return
         }
         if (text.length > 0) {
+            // Filtrar por ID de usuario
+            const userId = parseInt(text, 10)
+            if(typeof userId === 'number' && !isNaN(userId)) {
+                const filteredTasks = tasks.data.filter((task: Task) => task.userId === userId)
+                setTasks({
+                    ...tasks,
+                    data: filteredTasks,
+                    success: filteredTasks.length > 0,
+                    message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas para ese usuario'
+                })
+                return
+            }
             // Filltar por titulo de la tarea
-            const filteredTasks = tasks.data.filter((task: Task) => 
-                task.title.toLowerCase().includes(text.toLowerCase())
-            )
-            setTasks({
-                ...tasks,
-                data: filteredTasks,
-                success: filteredTasks.length > 0,
-                message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
-            })
+            if(typeof text === 'string') {
+                const filteredTasks = tasks.data.filter((task: Task) => 
+                    task.title.toLowerCase().includes(text.toLowerCase())
+                )
+                setTasks({
+                    ...tasks,
+                    data: filteredTasks,
+                    success: filteredTasks.length > 0,
+                    message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
+                })
+                return
+            }
+            
+            
+            
         }
     }
 
@@ -72,6 +106,9 @@ export default function HomePage(){
         useStoreLogin.setState({ isLoggedIn: false, user: null })
         router.replace('/Login')
     }
+
+       
+        
     return (
         <>
             <SafeAreaComponent>
@@ -93,6 +130,10 @@ export default function HomePage(){
                     <Button 
                         title='Cerrar Sesión'
                         onPress={sigOut}
+                    />
+                    <Button 
+                        title='Par o Inpar'
+                        onPress={evenOrOdd}
                     />
                 </View>
                 <ScrollView style={{ flex: 1, padding: 10 }}>
