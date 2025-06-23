@@ -5,7 +5,6 @@ import useStoreLogin from './Stores/useStore';
 
 export default function Index() {
     const isLoggedIn = useStoreLogin((state) => state.isLoggedIn);
-    console.log('User logged in:', isLoggedIn);
 
     if (isLoggedIn) {
         return <Redirect href="/Home" />;

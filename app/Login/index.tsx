@@ -13,7 +13,6 @@ export default function LoginPage() {
     const [password, setPassword] = useState('th1s1sadm1n')
 
     const updateLogin = useStoreLogin((state) => state.setIsLoggedIn)
-    // const updateLogin = useStoreLogin.getState().setIsLoggedIn
     const onChangeEmail = (text: string) => {
         setEmail(text)
     }
@@ -67,28 +66,9 @@ export default function LoginPage() {
             topOffset: 50,
             bottomOffset: 40,
         });
-        
-        // useStoreLogin.getState().setIsLoggedIn(true);
-        // useStoreLogin.subscribe((state) => {
-        //     if (state.isLoggedIn) {
-        //         router.replace('/Home');
-        //     }
-        // });
+
         router.replace('/Home');
-
         updateLogin(true);
-        // (useStoreLogin.getState() as { setIsLoggedIn: (loggedIn: boolean) => void }).setIsLoggedIn(true)
-        // userStore.setState({
-        //     isLoggedIn: true,
-        //     user: user,
-        // })
-        // updateLogin.persist.rehydrate() // Ensure the store is persisted after login
-        // userStore.setState({ token: 'fake
-        // userStore.getState().setIsLoggedIn(true);
-        // useStoreLogin.getState().setUser(user);
-        // useStoreLogin.persist.rehydrate()// Ensure the store is persisted after login
-
-        
 
         return  
     }   
