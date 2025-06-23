@@ -11,7 +11,7 @@ import useStoreLogin from '../Stores/useStore'
 export default function HomePage(){
     
     const router = useRouter();
-    const limitTask = 5
+    const limitTask = 30
     const user = useStoreLogin(state => state.user)
     console.log('user', user)
     const [tasks, setTasks] = useState({
@@ -24,7 +24,15 @@ export default function HomePage(){
         const fetchTasks = async () => {
             const getAllTasks = await getTasks(limitTask)
             console.log('getAllTasks', getAllTasks)
-            setTasks(getAllTasks)
+            // Si el usuario es admin (userID: 0), se obtienen todas las tareas
+            if (user && user.userId === 0) {
+                // Aquí podrías implementar la lógica para obtener todas las tareas si el usuario es admin
+                setTasks(getAllTasks)
+            }else {
+                // Si el usuario no es admin, se obtienen las tareas limitadas
+                getAllTasks.data = getAllTasks.data.filter((task: Task) => task.userId === user?.userId)
+                setTasks(getAllTasks)
+            }
         }
         fetchTasks()
     }, [])
@@ -32,29 +40,38 @@ export default function HomePage(){
         // - **Funcionalidad de Filtro**: 
         // Proporciona un botón que permita alternar la vista entre tareas con ID par o impar, 
         // filtrar tareas por ID de usuarios, y en caso de ser usuario  admin (userID: 0) mostrar todas las tareas.
-        if (text.length > 0) {
-            const filteredTasks = tasks.data.filter((task: Task) =>
-                task.title.toLowerCase().includes(text.toLowerCase())
-            )
-            setTasks({
-                ...tasks,
-                data: filteredTasks,
-                success: filteredTasks.length > 0,
-                message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas'
-            })
-        } else {
+
+        // Aquí puedes implementar la lógica de filtrado
+        if (text.length === 0) {
             // Si el input está vacío, volvemos a cargar todas las tareas
             const fetchTasks = async () => {
                 const getAllTasks = await getTasks(limitTask)
                 setTasks(getAllTasks)
             }
             fetchTasks()
+            return
+        }
+        if (text.length > 0) {
+            // Filltar por titulo de la tarea
+            const filteredTasks = tasks.data.filter((task: Task) => 
+                task.title.toLowerCase().includes(text.toLowerCase())
+            )
+            setTasks({
+                ...tasks,
+                data: filteredTasks,
+                success: filteredTasks.length > 0,
+                message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
+            })
         }
     }
 
     const addNewTask = () => {
         router.push('/Home/AddTask')
-    }   
+    }
+    const sigOut = () => {
+        useStoreLogin.setState({ isLoggedIn: false, user: null })
+        router.replace('/Login')
+    }
     return (
         <>
             <SafeAreaComponent>
@@ -68,14 +85,14 @@ export default function HomePage(){
                     <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Buscar Tareas</Text>
                     <Button
                         title="Agregar Tarea"
-                        // onPress={() => {
-                        //     // Aquí puedes agregar la lógica para agregar una nueva tarea
-                        //     console.log('Agregar Tarea presionado')
-                        // }}
                         onPress={addNewTask}
                         color="#007BFF"
                         accessibilityLabel="Agregar Tarea"
                         testID="add-task-button"
+                    />
+                    <Button 
+                        title='Cerrar Sesión'
+                        onPress={sigOut}
                     />
                 </View>
                 <ScrollView style={{ flex: 1, padding: 10 }}>
@@ -83,8 +100,9 @@ export default function HomePage(){
                         tasks.data.map((task: Task, index) => (
                             // <Text key={index}>{task.title}</Text>
                             <View key={index} style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{task.id}</Text>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{task.title}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>ID: {task.id}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>UserId: {task.userId}</Text>
+                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Titulo: {task.title}</Text>
                                 <Text style={{ color: task.completed ? 'green' : 'red' }}>
                                     {task.completed ? 'Completada' : 'Pendiente'}
                                 </Text>

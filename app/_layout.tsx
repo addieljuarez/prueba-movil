@@ -9,6 +9,7 @@ export default function RootLayout() {
     <ThemeProvider value={DefaultTheme}>
       <Stack>
         <Stack.Screen name="index"options={{ headerShown: false }}/>
+        <Stack.Screen name="Login/index"options={{ headerShown: false }}/>
         <Stack.Screen name="Home/ListTask" options={{ headerShown: false }}/>
         <Stack.Screen name="Home/AddTask" options={{ headerShown: false }}/>
       </Stack>
