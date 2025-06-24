@@ -8,7 +8,6 @@ export const getTasks = async (
     setSuccess: (success: boolean) => void,
     resetState: () => void
 ): Promise<void> => {
-
     setIsLoading(true);
     const urlTasks = 'https://jsonplaceholder.typicode.com/todos';
     const req = await fetch(urlTasks, {
@@ -36,13 +35,12 @@ export const getTasks = async (
         setError(false);
     }
 
-    // Mapear los datos para que coincidan con el esquema Task
     res.length = limitTask;
     res.forEach((task, index) => {
-        task.userId = task.userId || 1; // Asignar un userId por defecto si no existe
-        task.id = task.id || index + 1; // Asignar un id por defecto si no existe
-        task.title = task.title || `Tarea ${index + 1}`; // Asignar un título por defecto si no existe
-        task.completed = task.completed || false; // Asignar completed por defecto si no existe
+        task.userId = task.userId || 1; 
+        task.id = task.id || index + 1;
+        task.title = task.title || `Tarea ${index + 1}`;
+        task.completed = task.completed || false;
     });
 
     setData(resLimit);
