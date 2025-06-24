@@ -41,6 +41,7 @@ export const schemaUser = z.object({
     userId: z.number() ,
 })
 
+
 export type StateStore = z.infer<typeof schemaStateStore>
 export type ActionStore = z.infer<typeof schemaActionStore>
 export type User = z.infer<typeof schemaUser>

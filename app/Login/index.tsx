@@ -1,4 +1,4 @@
-import useStoreLogin from '@/app/Stores/useStore';
+import { useStoreLogin } from '@/app/Stores/useStore';
 import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { Button, Text, TextInput, View } from "react-native";

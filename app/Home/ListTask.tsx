@@ -4,7 +4,7 @@ import { Button, ScrollView, Text, TextInput, View } from 'react-native'
 import { getTasks } from '../API'
 import SafeAreaComponent from '../Components/SafeAreaComponent'
 import { Task } from '../Schemas/tasks'
-import useStoreLogin from '../Stores/useStore'
+import { useStoreLogin, useStoreTask } from '../Stores/useStore'
 
 
 
@@ -13,7 +13,6 @@ export default function HomePage(){
     const router = useRouter();
     const limitTask = 30
     const user = useStoreLogin(state => state.user)
-    // console.log('user', user)
     const [tasks, setTasks] = useState({
         success: false,
         data: [],
@@ -23,24 +22,38 @@ export default function HomePage(){
         console.log('evenOrOdd')
     }
     
+    const setData = useStoreTask(data => data.setData)
+    const setIsLoading = useStoreTask(data => data.setLoading)
+    const setSuccess = useStoreTask(data => data.setSuccess)
+    const resetState = useStoreTask(data => data.resetState)
+    const setError = useStoreTask(data => data.setError)
+    const isLoading = useStoreTask(data => data.loading)
+    const success = useStoreTask(data => data.success)
+    const data = useStoreTask(data => data.data)
+
+
     useEffect(() => {
         const fetchTasks = async () => {
-            const getAllTasks = await getTasks(limitTask)
-            // console.log('getAllTasks', getAllTasks)
-            // Si el usuario es admin (userID: 0), se obtienen todas las tareas
-            if (user && user.userId === 0) {
-                // Aquí podrías implementar la lógica para obtener todas las tareas si el usuario es admin
-                setTasks(getAllTasks)
-            }else {
-                // Si el usuario no es admin, se obtienen las tareas limitadas
-                // console.log('user?.userId', user?.userId)
-                // console.log('getAllTasks.data', getAllTasks.data)
-                getAllTasks.data = getAllTasks.data.filter((task: Task) => task.userId === user?.userId)
-                setTasks(getAllTasks)
+            await getTasks(limitTask, setData, setIsLoading, setError, setSuccess, resetState)
+            if(success){
+                const dataUser = data.filter((task: Task) => task.userId === user?.userId)
+                setTasks({
+                    success: true,
+                    data: user && user.userId === 0 ? data: dataUser,
+                    message: 'Tareas obtenidas correctamente'
+                })
+                
+            }else{
+                setTasks({
+                    success: false,
+                    data: [],
+                    message: 'No se encontraron tareas'
+                })
             }
+            setIsLoading(false)
         }
         fetchTasks()
-    }, [user])
+    }, [user, setData, setIsLoading, setSuccess, resetState, setError, success, data])
     const onChangeSearch = (text: string) => {
         // - **Funcionalidad de Filtro**: 
         // Proporciona un botón que permita alternar la vista entre tareas con ID par o impar, 
@@ -50,7 +63,7 @@ export default function HomePage(){
         if (text.length === 0) {
             // Si el input está vacío, volvemos a cargar todas las tareas
             const fetchTasks = async () => {
-                const getAllTasks = await getTasks(limitTask)
+                const getAllTasks = await getTasks(limitTask, setData, setIsLoading, setError, setSuccess, resetState)
                 // setTasks(getAllTasks)
 
                 if (user && user.userId === 0) {
@@ -68,6 +81,7 @@ export default function HomePage(){
             return
         }
         if (text.length > 0) {
+            // TODO: Implemetar la logina para buscar por status completo o incpmpleto
             // Filtrar por ID de usuario
             const userId = parseInt(text, 10)
             if(typeof userId === 'number' && !isNaN(userId)) {

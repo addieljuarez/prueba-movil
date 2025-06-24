@@ -1,32 +1,39 @@
 import { Task } from "../Schemas/tasks";
 
-export const getTasks = async(limitTask: number) => {
-    
-    const urlTasks = 'https://jsonplaceholder.typicode.com/todos'
+export const getTasks = async (
+    limitTask: number,
+    setData: (data: Task[]) => void,
+    setIsLoading: (loading: boolean) => void,
+    setError: (error: boolean) => void,
+    setSuccess: (success: boolean) => void,
+    resetState: () => void
+): Promise<void> => {
+
+    setIsLoading(true);
+    const urlTasks = 'https://jsonplaceholder.typicode.com/todos';
     const req = await fetch(urlTasks, {
         method: 'get',
         headers: {
             'Content-Type': 'application/json'
         }
-    })
+    });
 
     const res = await req.json() as Task[];
     const resLimit = res.slice(0, limitTask);
-    
+
     if (!req.ok) {
-        return {
-            success: false,
-            data: [],
-            message: 'Error al obtener las tareas'
-        }
+        setError(true)
+        setIsLoading(false);
+        setSuccess(false);
+        resetState();
     }
 
     if (resLimit.length === 0) {
-        return {
-            success: false,
-            data: [],
-            message: 'No hay tareas disponibles'
-        }
+        setIsLoading(false);
+        setSuccess(false);
+        resetState();
+        setData([]);
+        setError(false);
     }
 
     // Mapear los datos para que coincidan con el esquema Task
@@ -37,9 +44,9 @@ export const getTasks = async(limitTask: number) => {
         task.title = task.title || `Tarea ${index + 1}`; // Asignar un título por defecto si no existe
         task.completed = task.completed || false; // Asignar completed por defecto si no existe
     });
-    return {
-        success: res.length > 0? true : false,
-        data: resLimit,
-        message: res.length > 0? 'Tareas obtenidas correctamente' : 'No hay tareas disponibles'
-    }
-}
+
+    setData(resLimit);
+    setIsLoading(false);
+    setSuccess(true);
+    setError(false);
+};
