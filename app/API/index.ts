@@ -6,8 +6,10 @@ export const getTasks = async (
     setIsLoading: (loading: boolean) => void,
     setError: (error: boolean) => void,
     setSuccess: (success: boolean) => void,
-    resetState: () => void
+    resetState: () => void,
+    userId?: number | null
 ): Promise<void> => {
+    
     setIsLoading(true);
     const urlTasks = 'https://jsonplaceholder.typicode.com/todos';
     const req = await fetch(urlTasks, {
@@ -35,16 +37,9 @@ export const getTasks = async (
         setError(false);
     }
 
-    res.length = limitTask;
-    res.forEach((task, index) => {
-        task.userId = task.userId || 1; 
-        task.id = task.id || index + 1;
-        task.title = task.title || `Tarea ${index + 1}`;
-        task.completed = task.completed || false;
-    });
 
     setData(resLimit);
     setIsLoading(false);
-    setSuccess(true);
     setError(false);
+    setSuccess(true);
 };

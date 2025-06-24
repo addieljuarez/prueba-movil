@@ -10,14 +10,7 @@ import { useStoreLogin, useStoreTask } from '../Stores/useStore'
 
 export default function HomePage(){
 
-    const setData = useStoreTask(data => data.setData)
-    const setIsLoading = useStoreTask(data => data.setLoading)
-    const setSuccess = useStoreTask(data => data.setSuccess)
-    const resetState = useStoreTask(data => data.resetState)
-    const setError = useStoreTask(data => data.setError)
-    // const isLoading = useStoreTask(data => data.loading)
-    const success = useStoreTask(data => data.success)
-    const data = useStoreTask(data => data.data)
+    
     
     const router = useRouter();
     const limitTask = 30
@@ -32,25 +25,37 @@ export default function HomePage(){
         console.log('evenOrOdd')
     }
     
+    const setData = useStoreTask(data => data.setData)
+    const setIsLoading = useStoreTask(data => data.setLoading)
+    const setSuccess = useStoreTask(data => data.setSuccess)
+    const resetState = useStoreTask(data => data.resetState)
+    const setError = useStoreTask(data => data.setError)
+    // const isLoading = useStoreTask(data => data.loading)
+    const success = useStoreTask(data => data.success)
+    const data = useStoreTask(data => data.data)
 
     useEffect(() => {
         const fetchTasks = async () => {
-            await getTasks(limitTask, setData, setIsLoading, setError, setSuccess, resetState)
+
+            await getTasks(limitTask, setData, setIsLoading, setError, setSuccess, resetState, user?.userId)
+            
             if(success){
+                const dataUser = data.filter((task: Task) => task.userId === user?.userId)
                 setTasks({
-                    success: true,
-                    data: data,
+                    success,
+                    data: user && user.userId === 0 ? data : dataUser,
                     message: 'Tareas obtenidas correctamente'
                 })
             }else{
                 setTasks({
-                    success: false,
+                    success,
                     data: [],
                     message: 'No se encontraron tareas'
                 })
             }
         }
         fetchTasks()
+     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, setData, setIsLoading, setSuccess, resetState, setError, success])
 
@@ -64,7 +69,6 @@ export default function HomePage(){
             })
             return
         }else if (text.length > 0) {
-            // TODO: Implemetar la logina para buscar por status completo o incpmpleto
             // Filtrar por ID de usuario
             const userId = parseInt(text, 10)
             if(typeof userId === 'number' && !isNaN(userId)) {
@@ -77,22 +81,35 @@ export default function HomePage(){
                 })
                 return
             }
-            // Filltar por titulo de la tarea
-            // if(typeof text === 'string') {
-            //     const filteredTasks = tasks.data.filter((task: Task) => 
-            //         task.title.toLowerCase().includes(text.toLowerCase())
-            //     )
-            //     setTasks({
-            //         ...tasks,
-            //         data: filteredTasks,
-            //         success: filteredTasks.length > 0,
-            //         message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
-            //     })
-            //     return
-            // }
-            
-            
-            
+
+            if(typeof text === 'string') {
+                // Filtrar por estado de la tarea
+                if(text.toLowerCase() === 'completada' || text.toLowerCase() === 'pendiente') {
+                    const isCompleted = text.toLowerCase() === 'completada'
+                    const filteredTasks = data.filter((task: Task) => task.userId === user?.userId)
+                    const filteredTasks1 = user && user.userId === 0 ?
+                        data.filter((task: Task) => task.completed === isCompleted):
+                        filteredTasks.filter((task: Task) => task.completed === isCompleted)
+
+                    setTasks({
+                        data: filteredTasks1,
+                        success: filteredTasks1.length > 0,
+                        message: filteredTasks1.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese estado'
+                    })
+                    return
+                }else{
+                    // Filtrar por titulo de la tarea
+                    const filteredTasks = tasks.data.filter((task: Task) => 
+                        task.title.toLowerCase().includes(text.toLowerCase())
+                    )
+                    setTasks({
+                        data: filteredTasks,
+                        success: filteredTasks.length > 0,
+                        message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
+                    })
+                    return
+                }
+            }
         }
     }
 
@@ -101,6 +118,7 @@ export default function HomePage(){
     }
     const sigOut = () => {
         useStoreLogin.setState({ isLoggedIn: false, user: null })
+        useStoreTask.setState({ data: [], loading: false, success: false, error: false })
         router.replace('/Login')
     }
 
@@ -109,7 +127,6 @@ export default function HomePage(){
     return (
         <>
             <SafeAreaComponent>
-                {/* aqio va el input del buscador */}
                 <View style={{ padding: 10, backgroundColor: '#f8f8f8', borderRadius: 5, marginBottom: 10 }}>
                     <TextInput
                         placeholder="Buscar Tareas"
@@ -134,7 +151,7 @@ export default function HomePage(){
                     />
                 </View>
                 <ScrollView style={{ flex: 1, padding: 10 }}>
-                    {tasks.success ? (
+                    {success ? (
                         tasks.data.map((task: Task, index) => (
                             <View key={index} style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
                                 <Text style={{ fontSize: 16, fontWeight: 'bold' }}>ID: {task.id}</Text>
