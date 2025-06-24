@@ -1,17 +1,19 @@
+import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, ScrollView, Text, TextInput, View } from 'react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { getTasks } from '../API'
 import SafeAreaComponent from '../Components/SafeAreaComponent'
 import { Task } from '../Schemas/tasks'
 import { useStoreLogin, useStoreTask } from '../Stores/useStore'
+import ListEvenPage from './ListEven'
+import StylesListTask from './ListTask.styles'
 
 
 
 export default function HomePage(){
 
-    
-    
     const router = useRouter();
     const limitTask = 30
     const user = useStoreLogin(state => state.user)
@@ -20,10 +22,14 @@ export default function HomePage(){
         data: [],
         message: ''
     })
+    const [backgroundColor, setBackgroundColor] = useState('transparent')
 
-    const evenOrOdd = () => {
-        console.log('evenOrOdd')
-    }
+    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+    const handlePresentModalPress = useCallback(() => {
+        bottomSheetModalRef.current?.present();
+        setBackgroundColor('rgba(0, 0, 0, 0.5)')
+    }, []);
     
     const setData = useStoreTask(data => data.setData)
     const setIsLoading = useStoreTask(data => data.setLoading)
@@ -122,6 +128,12 @@ export default function HomePage(){
         router.replace('/Login')
     }
 
+    const handleSheetChanges = useCallback((index: number) => {
+        if(index === -1){
+            setBackgroundColor('transparent')
+        }
+    }, []);
+
        
         
     return (
@@ -147,7 +159,7 @@ export default function HomePage(){
                     />
                     <Button 
                         title='Par o Inpar'
-                        onPress={evenOrOdd}
+                        onPress={handlePresentModalPress}
                     />
                 </View>
                 <ScrollView style={{ flex: 1, padding: 10 }}>
@@ -165,8 +177,29 @@ export default function HomePage(){
                     ) : (
                         <Text>{tasks.message}</Text>
                     )}
+
+                    
+                    
                 </ScrollView>
                 
+                
+                <GestureHandlerRootView style={[StylesListTask.comtainerGesture, {
+                    backgroundColor: backgroundColor
+                }]}>
+                        <BottomSheetModalProvider>
+                            <BottomSheetModal
+                                ref={bottomSheetModalRef}
+                                onChange={handleSheetChanges}
+                                style={{
+                                    marginTop: 100,
+                                }}
+                            >
+                                <BottomSheetView style={StylesListTask.bottomSheetView}>
+                                    <ListEvenPage />
+                                </BottomSheetView>
+                            </BottomSheetModal>
+                        </BottomSheetModalProvider>
+                    </GestureHandlerRootView>
             </SafeAreaComponent>
         </>
     )
