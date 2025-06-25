@@ -1,3 +1,4 @@
+import Pagination from '@cherry-soft/react-native-basic-pagination'
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
@@ -15,7 +16,8 @@ import StylesListTask from './ListTask.styles'
 export default function HomePage(){
 
     const router = useRouter();
-    const limitTask = 30
+    const limitTask = 52
+    const itemsToPage = 10
     const user = useStoreLogin(state => state.user)
     const [tasks, setTasks] = useState({
         success: false,
@@ -23,6 +25,9 @@ export default function HomePage(){
         message: ''
     })
     const [backgroundColor, setBackgroundColor] = useState('transparent')
+    const [page, setPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0)
+    const [viewPagination, setViewPagination] = useState(true)
 
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -47,9 +52,10 @@ export default function HomePage(){
             
             if(success){
                 const dataUser = data.filter((task: Task) => task.userId === user?.userId)
+                setTotalItems(user && user.userId === 0 ? data.length : dataUser.length)
                 setTasks({
                     success,
-                    data: user && user.userId === 0 ? data : dataUser,
+                    data: user && user.userId === 0 ? itemsPagination(data, page, itemsToPage) : itemsPagination(dataUser, page, itemsToPage),
                     message: 'Tareas obtenidas correctamente'
                 })
             }else{
@@ -63,7 +69,7 @@ export default function HomePage(){
         fetchTasks()
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user, setData, setIsLoading, setSuccess, resetState, setError, success])
+    }, [user, setData, setIsLoading, setSuccess, resetState, setError, success, page, itemsToPage])
 
     const onChangeSearch = (text: string) => {
         if (text.length === 0) {
@@ -73,6 +79,7 @@ export default function HomePage(){
                 data: user && user.userId === 0 ? data: dataUser,
                 message: 'Tareas obtenidas correctamente'
             })
+            setViewPagination(true)
             return
         }else if (text.length > 0) {
             // Filtrar por ID de usuario
@@ -85,6 +92,7 @@ export default function HomePage(){
                     success: filteredTasks.length > 0,
                     message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas para ese usuario'
                 })
+                setViewPagination(false)
                 return
             }
 
@@ -102,10 +110,11 @@ export default function HomePage(){
                         success: filteredTasks1.length > 0,
                         message: filteredTasks1.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese estado'
                     })
+                    setViewPagination(false)
                     return
                 }else{
                     // Filtrar por titulo de la tarea
-                    const filteredTasks = tasks.data.filter((task: Task) => 
+                    const filteredTasks = data.filter((task: Task) => 
                         task.title.toLowerCase().includes(text.toLowerCase())
                     )
                     setTasks({
@@ -113,6 +122,7 @@ export default function HomePage(){
                         success: filteredTasks.length > 0,
                         message: filteredTasks.length > 0 ? 'Tareas filtradas correctamente' : 'No se encontraron tareas con ese título'
                     })
+                    setViewPagination(false)
                     return
                 }
             }
@@ -134,8 +144,14 @@ export default function HomePage(){
         }
     }, []);
 
-       
-        
+    const itemsPagination = (_data, _page: number, _itemsToPage: number) => {
+        const positionArray = _page * _itemsToPage
+        const startIndex = positionArray  - _itemsToPage
+        const finishIndex = positionArray 
+        return _data.slice(startIndex, finishIndex)
+    } 
+    
+    // console.log('itemsPagination', itemsPagination(data, page, itemsToPage))
     return (
         <>
             <SafeAreaComponent>
@@ -177,10 +193,18 @@ export default function HomePage(){
                     ) : (
                         <Text>{tasks.message}</Text>
                     )}
-
-                    
                     
                 </ScrollView>
+                
+                { viewPagination && (
+                    <Pagination
+                        totalItems={totalItems}
+                        pageSize={itemsToPage}
+                        currentPage={page}
+                        onPageChange={setPage}
+                    />
+                )}
+                
                 
                 
                 <GestureHandlerRootView style={[StylesListTask.comtainerGesture, {
