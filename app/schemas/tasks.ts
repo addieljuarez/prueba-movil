@@ -21,7 +21,10 @@ export const shemaTaskStore = z.object({
     setErrorData: z.function().args(z.null()).returns(z.void()),
     setSuccess: z.function().args(z.boolean()).returns(z.void()),
     setLimit: z.function().args(z.number()).returns(z.void()),
-    resetState: z.function().returns(z.void())
+    resetState: z.function().returns(z.void()),
+    addTask: z.function().args(schemaTask).returns(z.void()),
+    removeTask: z.function().args(z.number()).returns(z.void()),
+    updateTask: z.function().args(schemaTask).returns(z.void()),
 })
 
 export type Task = z.infer<typeof schemaTask>

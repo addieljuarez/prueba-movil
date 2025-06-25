@@ -45,6 +45,17 @@ export const useStoreTask = create(
                 errorData: null,
                 success: false
             }),
+            addTask: (task) => set((state) => ({
+                data: [...(state.data || []), task],
+            })),
+            removeTask: (taskId) => set((state) => ({
+                data: state.data?.filter((task) => task.id !== taskId) || [],
+            })),
+            updateTask: (updatedTask) => set((state) => ({
+                data: state.data?.map((task) =>
+                    task.id === updatedTask.id ? updatedTask : task
+                ) || [],
+            })),
         }),
         {
             name: 'tasks-storage', // unique name for the storage

@@ -69,7 +69,21 @@ export default function HomePage(){
         fetchTasks()
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [user, setData, setIsLoading, setSuccess, resetState, setError, success, page, itemsToPage])
+    }, [user, setData, setIsLoading, setSuccess, resetState, setError, success])
+
+
+    useEffect(() => {
+        console.log('data', data.length)
+        if(data.length > 0) {
+            const dataUser = data.filter((task: Task) => task.userId === user?.userId)
+            setTotalItems(user && user.userId === 0 ? data.length : dataUser.length)
+            setTasks({
+                success: true,
+                data: user && user.userId === 0 ? itemsPagination(data, page, itemsToPage) : itemsPagination(dataUser, page, itemsToPage),
+                message: 'Tareas obtenidas correctamente'
+            })
+        }
+    }, [data, user, page, itemsToPage])
 
     const onChangeSearch = (text: string) => {
         if (text.length === 0) {
@@ -145,6 +159,7 @@ export default function HomePage(){
     }, []);
 
     const itemsPagination = (_data, _page: number, _itemsToPage: number) => {
+        console.log('itemsPagination', _data, _page, _itemsToPage)
         const positionArray = _page * _itemsToPage
         const startIndex = positionArray  - _itemsToPage
         const finishIndex = positionArray 
