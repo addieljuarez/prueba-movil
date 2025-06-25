@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, ScrollView, Text, TextInput, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import Toast from 'react-native-toast-message'
 import { getTasks } from '../API'
 import SafeAreaComponent from '../Components/SafeAreaComponent'
 import { Task } from '../Schemas/tasks'
@@ -73,7 +74,6 @@ export default function HomePage(){
 
 
     useEffect(() => {
-        console.log('data', data.length)
         if(data.length > 0) {
             const dataUser = data.filter((task: Task) => task.userId === user?.userId)
             setTotalItems(user && user.userId === 0 ? data.length : dataUser.length)
@@ -159,14 +159,12 @@ export default function HomePage(){
     }, []);
 
     const itemsPagination = (_data, _page: number, _itemsToPage: number) => {
-        console.log('itemsPagination', _data, _page, _itemsToPage)
         const positionArray = _page * _itemsToPage
         const startIndex = positionArray  - _itemsToPage
         const finishIndex = positionArray 
         return _data.slice(startIndex, finishIndex)
     } 
     
-    // console.log('itemsPagination', itemsPagination(data, page, itemsToPage))
     return (
         <>
             <SafeAreaComponent>
@@ -203,6 +201,42 @@ export default function HomePage(){
                                 <Text style={{ color: task.completed ? 'green' : 'red' }}>
                                     {task.completed ? 'Completada' : 'Pendiente'}
                                 </Text>
+                                <Button
+                                    title="Editar"
+                                    onPress={() => router.push({
+                                        pathname: '/Home/[idTask]',
+                                        params: {
+                                            idTask: task.id
+                                        }
+                                    })}
+                                    color="#007BFF"
+                                />
+                                {/* <Link 
+                                    href={`/Home/${task.id}`}
+                                    style={{ color: '#007BFF', marginVertical: 5 }}
+                                    accessibilityLabel={`Editar Tarea ${task.id}`}
+                                    testID={`edit-task-link-${task.id}`}
+                                >
+                                    Editar
+                                </Link> */}
+                                <Button
+                                    title="Eliminar"
+                                    onPress={() => {
+                                        useStoreTask.getState().removeTask(task.id)
+                                        Toast.show({
+                                            type: 'success',
+                                            text1: 'Tarea eliminada correctamente',
+                                            position: 'top',
+                                            visibilityTime: 3000,
+                                            autoHide: true,
+                                            topOffset: 50,
+                                            bottomOffset: 40,
+                                        })
+                                    }}
+                                    color="#FF0000"
+                                    accessibilityLabel="Eliminar Tarea"
+                                    testID={`delete-task-button-${task.id}`}
+                                />
                             </View>
                         ))
                     ) : (
