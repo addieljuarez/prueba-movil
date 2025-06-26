@@ -2,7 +2,7 @@ import Pagination from '@cherry-soft/react-native-basic-pagination'
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast from 'react-native-toast-message'
 import { getTasks } from '../API'
@@ -202,26 +202,26 @@ export default function HomePage(){
                             <View key={index} style={StylesListTask.containerTask}>
                                 <View style={StylesListTask.containerTextButtons}>
                                     <View style={StylesListTask.containerText}>
-                                        <Text style={{ color: task.completed ? 'green' : 'red' }}>
-                                            {task.completed ? 'Completada' : 'Pendiente'} ID: {task.id}
+                                        <Text style={{ color: task.completed ? '#5F33E1' : '#9887CA' }}>
+                                            {task.completed ? 'Completada' : 'Pendiente'} (ID: {task.id})
                                         </Text>
-                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Titulo: {task.title}</Text>
+                                        <Text style={StylesListTask.textTitleTask}>Titulo: {task.title}</Text>
                                     </View>
                                     
                                     <View style={StylesListTask.containerButtons}>
-                                        <Button
-                                            title="Editar"
-                                            onPress={() => router.push({
+                                        <TouchableOpacity onPress={() => router.push({
                                                 pathname: '/Home/[idTask]',
                                                 params: {
                                                     idTask: task.id
                                                 }
-                                            })}
-                                            color="#007BFF"
-                                        />
-                                        <Button
-                                            title="Eliminar"
-                                            onPress={() => {
+                                            })} style={StylesListTask.buttonAction}>
+                                            <ImageBackground 
+                                                source={require('../../assets/edit.png')}
+                                                style={StylesListTask.imageButton}
+                                                resizeMode="contain"
+                                            />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => {
                                                 useStoreTask.getState().removeTask(task.id)
                                                 Toast.show({
                                                     type: 'success',
@@ -232,11 +232,13 @@ export default function HomePage(){
                                                     topOffset: 50,
                                                     bottomOffset: 40,
                                                 })
-                                            }}
-                                            color="#FF0000"
-                                            accessibilityLabel="Eliminar Tarea"
-                                            testID={`delete-task-button-${task.id}`}
-                                        />
+                                            }} style={StylesListTask.buttonAction}>
+                                            <ImageBackground 
+                                                source={require('../../assets/trash.png')}
+                                                style={StylesListTask.imageButton}
+                                                resizeMode="contain"
+                                            />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                                 

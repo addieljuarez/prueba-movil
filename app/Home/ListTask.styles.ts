@@ -54,22 +54,33 @@ const StylesListTask = StyleSheet.create({
     },
     containerTextButtons: {
         flexDirection: 'row',
-        flex: 1
     },
     containerText: {
-        borderColor: 'red',
-        borderWidth: 1,
-        flex: 1
+        flex: 2,
+        padding: 10,
     },
     containerButtons: {
-        borderColor: 'gren',
-        borderWidth: 1,
-        flex: 1
-    }
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textTitleTask: {
+        fontSize: 15, 
+        top: 5
+    },
+    buttonAction: {
+        height: 35,
+        width: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    imageButton: {
+        width: 18,
+        height: 18,
+        resizeMode: 'contain',
+    },
 })
 
 
-// borderColor: '#DCDCDC',
-//         borderWidth: 1,
-//         borderRadius: 20
 export default StylesListTask
