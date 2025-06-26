@@ -15,25 +15,6 @@ export default function EditTask(){
     const [selectedPending, setSelectedPending ] = useState(false);
     const task = useStoreTask.getState().data?.find(task => task.id === Number(idTask))
 
-    // if(!task){
-    //     router.replace('/Home/i')
-    //     return null
-    // }
-
-    // que se carge el nombre de la tarea y el estado
-    // if(task){
-    //     setNametask(task.title)
-    //     setSelectedCompleted(task.completed)
-    //     setSelectedPending(!task.completed)
-    // }
-    // if(task){
-    //     setNametask(task.title)
-    //     setSelectedCompleted(task.completed)
-    //     setSelectedPending(!task.completed)
-    // }
-
-    // const [selectedComplete, setSelectedCompleted ] = useState(task?.completed || false);
-    // const [selectedPending, setSelectedPending ] = useState(!task?.completed || false);
 
     useEffect(() => {
         if(task){

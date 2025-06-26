@@ -1,8 +1,9 @@
 import { useStoreLogin } from '@/app/Stores/useStore';
 import { useRouter } from 'expo-router';
 import { useState } from "react";
-import { Button, Text, TextInput, View } from "react-native";
+import { ImageBackground, Text, TextInput, View } from "react-native";
 import Toast from 'react-native-toast-message';
+import ButtonCustom from '../Components/ButtonCustom';
 import { schemaLogin } from "../Schemas/user";
 import users from '../Stores/usuarios.json';
 import StyleLogin from './index.styles';
@@ -79,19 +80,31 @@ export default function LoginPage() {
         return  
     }   
     return (
-        <View style={StyleLogin.mainContainer}>
-            <Text>Organizador de tareas</Text>
-            <TextInput style={StyleLogin.inputForm}
-                onChangeText={onChangeEmail}
-                value={email}/>
-            <TextInput style={StyleLogin.inputForm}
-                secureTextEntry={true}
-                onChangeText={onChangePass}
-                value={password}/>
-            <Button
-                title="Entrar"
-                onPress={login}
-            />
-        </View>
+        <ImageBackground 
+            style={StyleLogin.mainContainer}
+            source={require('@/assets/backLogin.png')}
+            
+        >
+            <View style={StyleLogin.container}>
+                <Text style={StyleLogin.textTitle}>Organizador</Text>
+                <Text style={StyleLogin.textTitle}>de Tareas</Text>
+                <TextInput style={StyleLogin.inputForm}
+                    placeholder='Correo electrónico'
+                    onChangeText={onChangeEmail}
+                    value={email}/>
+                <TextInput style={StyleLogin.inputForm}
+                    placeholder='Contraseña'
+                    secureTextEntry={true}
+                    onChangeText={onChangePass}
+                    value={password}/>
+                <ButtonCustom 
+                    onPressFunction={login} 
+                    title='Entrar' 
+                    image={require('../../assets/ArrowLeft.png')}
+                    styleButton={{top: 5}}
+                />
+            </View>
+            
+        </ImageBackground>
     )
 }

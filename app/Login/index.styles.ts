@@ -4,15 +4,32 @@ const StyleLogin = StyleSheet.create({
     mainContainer : {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'flex-end',
         borderColor: 'red',
-        borderWidth: 1
+        borderWidth: 1,
     },
     inputForm: {
-        height: 40,
+        height: 60,
         margin: 12,
         borderWidth: 1,
         padding: 10,
+        width: 300,
+        borderRadius: 20,
+        borderColor: '#5F33E1',
+        fontSize: 12,
+        backgroundColor: 'white'
+    },
+    textTitle:{
+        fontStyle: "normal",
+        fontWeight: 'bold',
+        fontSize: 25,
+        textShadowColor: 'rgba(0, 0, 0, 0.60)',
+        textShadowOffset: {width: 0 , height: 1 },
+        textShadowRadius: 4
+    },
+    container: {
+        alignItems: 'center',
+        bottom: 80,
     }
 })
 
