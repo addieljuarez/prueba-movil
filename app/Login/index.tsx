@@ -1,4 +1,4 @@
-import { useStoreLogin } from '@/app/Stores/useStore';
+import { useStoreLogin, useStoreTask } from '@/app/Stores/useStore';
 import { useRouter } from 'expo-router';
 import { useState } from "react";
 import { ImageBackground, Text, TextInput, View } from "react-native";
@@ -18,6 +18,7 @@ export default function LoginPage() {
 
     const updateLogin = useStoreLogin((state) => state.setIsLoggedIn)
     const setUser = useStoreLogin(state => state.setUser)
+    const setIsLoading = useStoreTask(state => state.setLoading)
 
     const onChangeEmail = (text: string) => {
         setEmail(text)
@@ -28,6 +29,7 @@ export default function LoginPage() {
     }
 
     const login = () => {
+        setIsLoading(true)
         const dataValidation = {
             email: email,
             password: password
@@ -47,6 +49,7 @@ export default function LoginPage() {
                     bottomOffset: 40,
                 })
             })
+            setIsLoading(false)
             return
         }
 
@@ -61,23 +64,29 @@ export default function LoginPage() {
                 topOffset: 50,
                 bottomOffset: 40,
             })
+            setIsLoading(false)
             return
         }
-        Toast.show({
-            type: 'success',
-            text1: `Bienvenido ${user.email}`,
-            position: 'top',
-            visibilityTime: 3000,
-            autoHide: true,
-            topOffset: 50,
-            bottomOffset: 40,
-        });
 
-        router.replace('/Home/ListTask');
-        updateLogin(true);
-        setUser(user)
+        setTimeout(() => {
 
-        return  
+            Toast.show({
+                type: 'success',
+                text1: `Bienvenido ${user.email}`,
+                position: 'top',
+                visibilityTime: 3000,
+                autoHide: true,
+                topOffset: 50,
+                bottomOffset: 40,
+            });
+            
+            router.replace('/Home/ListTask');
+            updateLogin(true);
+            setUser(user)
+            setIsLoading(false)
+            return  
+        }, 3000)
+       
     }   
     return (
         <ImageBackground 
