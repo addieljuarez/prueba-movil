@@ -1,8 +1,10 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Text, TextInput, TouchableOpacity } from "react-native";
+import { ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Collapsible from "react-native-collapsible";
 import Toast from "react-native-toast-message";
+import ButtonCustom from "../Components/ButtonCustom";
+import HeaderCustom from "../Components/HeaderCustom";
 import SafeAreaComponent from "../Components/SafeAreaComponent";
 import { useStoreLogin, useStoreTask } from "../Stores/useStore";
 
@@ -25,12 +27,6 @@ export default function EditTask(){
             setSelectedPending(!task.completed)
         }
     }, [task])
-
-    const sigOut = () => {
-        useStoreLogin.setState({ isLoggedIn: false, user: null })
-        useStoreTask.setState({ data: [], loading: false, success: false, error: false })
-        router.replace('/Login')
-    }
 
     const upadteOnData = () => {
         if(nametask.trim() === ''){
@@ -105,85 +101,69 @@ export default function EditTask(){
     return(
         <>
             <SafeAreaComponent>
-                <Button 
-                    title="regresar"
-                    onPress={() => {
-                        router.back()
-                    }}
+                <HeaderCustom
+                    back={true}
+                    title='Editar tarea'
+                    isList={false}
                 />
-                <Button 
-                    title='cerrar sesion'
-                    onPress={sigOut}
-                />
-                <Text>
-                    Editar Tarea
-                </Text>
-                <TextInput 
-                placeholder='Nombre de la tarea'
-                value={nametask}
-                onChangeText={onChangeNameText}
-            />
-                <Button 
-                    title='Status de la tarea'
-                    onPress={() => {setCollapsed(!collapsed)}}
-                />
-                <Collapsible collapsed={collapsed} align="center">
-                
-                    <TouchableOpacity style={{
-                        padding: 20,
-                        backgroundColor: '#fff',
-                        borderColor: 'red',
-                        borderWidth: 2
-                    }}
-                    onPress={() => {
-                        setSelectedCompleted(true)
-                        setSelectedPending(false)
-                    }}
-                    >
-                        <Text>
-                            Completada
-                        </Text>
-                        {selectedComplete && (
-                            <>
+                <View style={Styles.container}>
+                    <View>
+                        <TextInput
+                            style={Styles.inputName}
+                            placeholder='Nombre de la tarea'
+                            value={nametask}
+                            onChangeText={onChangeNameText}
+                        />
+                        <TouchableOpacity style={Styles.buttonStatus}
+                            onPress={() => {setCollapsed(!collapsed)}}
+                        >
+                            <Text style={Styles.textButton}>Status de la tarea</Text>
+                            <ImageBackground 
+                                source={require('../../assets/arrow.png')}
+                                style={Styles.imageButton}
+                                resizeMode="contain"
+                            />
+                        </TouchableOpacity>
+                        <Collapsible collapsed={collapsed} style={Styles.collapsible}>
+                            <TouchableOpacity style={[Styles.containerSelect, {
+                                backgroundColor: selectedComplete ? '#5F33E1': 'white'
+                            }]}
+                                onPress={() => {
+                                    setSelectedCompleted(true)
+                                    setSelectedPending(false)
+                                }}
+                            >
                                 <Text>
-                                    Seleccionado
+                                    Completada
                                 </Text>
-                            </>
-                        )}
-
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                            padding: 20,
-                            backgroundColor: '#fff',
-                            borderColor: 'red',
-                            borderWidth: 2
-                            
-                        }}
-                        onPress={() => {
-                            setSelectedCompleted(false)
-                            setSelectedPending(true)
-                        }}
-                    >
-                        <Text>
-                            Pendiente
-                        </Text>
-                        {selectedPending && (
-                            <>
+                            </TouchableOpacity>
+    
+                            <TouchableOpacity style={[Styles.containerSelect, {
+                                backgroundColor: selectedPending ? '#5F33E1': 'white'
+                            }]}
+                                onPress={() => {
+                                    setSelectedCompleted(false)
+                                    setSelectedPending(true)
+                                }}
+                            >
                                 <Text>
-                                    Seleccionado
+                                    Pendiente
                                 </Text>
-                            </>
-                        )}
-                    </TouchableOpacity>
-                </Collapsible>
-                <Button 
-                    title='Guardar'
-                    onPress={upadteOnData}
-                />
-                <Button 
-                    title='Eliminar'
-                    onPress={deleteData}
-                />
+                            </TouchableOpacity>
+                        </Collapsible>
+                    </View>
+                    <View>
+                        <ButtonCustom
+                            title='Guardar'
+                            onPressFunction={upadteOnData}
+                        />
+                        <ButtonCustom
+                            title='Eliminar'
+                            onPressFunction={deleteData}
+                            buttonWhite={true}
+                        />
+                    </View>
+                </View>
             </SafeAreaComponent>
         </>
     )
@@ -348,3 +328,56 @@ export default function EditTask(){
 //         </SafeAreaComponent>
 //     )
 // }
+
+const Styles = StyleSheet.create({
+    container: {
+        justifyContent: 'space-between',
+        flex: 1,
+        alignItems:'center'
+    },
+    inputName: {
+        height: 60,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        width: 300,
+        borderRadius: 20,
+        borderColor: '#5F33E1',
+        fontSize: 12,
+        backgroundColor: 'white',
+    },
+    buttonStatus: {
+        height: 60,
+        margin: 12,
+        borderWidth: 1,
+        padding: 10,
+        width: 300,
+        borderRadius: 20,
+        borderColor: '#5F33E1',   
+        backgroundColor: 'white',
+        justifyContent: 'center'           
+    },
+    textButton: {
+        color: 'gray'
+    },
+    imageButton: {
+        position: 'absolute',
+        right: 20,
+        width: 18,
+        height: 18,
+        resizeMode: 'contain',
+    },
+    containerSelect: {
+        height: 60,
+        borderWidth: 1,
+        padding: 10,
+        width: 300,
+        borderRadius: 20,
+        borderColor: '#5F33E1',   
+        justifyContent: 'center'    
+    },
+    collapsible: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
+})

@@ -97,8 +97,7 @@ export default function AddTask(){
                             resizeMode="contain"
                         />
                     </TouchableOpacity>
-                    <Collapsible collapsed={collapsed}>
-                    
+                    <Collapsible collapsed={collapsed} style={Styles.collapsible}>
                         <TouchableOpacity style={[Styles.containerSelect, {
                             backgroundColor: selectedComplete ? '#5F33E1': 'white'
                         }]}
@@ -133,16 +132,11 @@ export default function AddTask(){
                         title='Guardar'
                         onPressFunction={saveOnData}
                     />
-                    
                     <ButtonCustom
                         title='Cancelar'
                         onPressFunction={() => {router.back()}}
                         buttonWhite={true}
                     />
-                    {/* <Button 
-                        title='Cancelar'
-                        onPress={() => {router.back()}}
-                    /> */}
                 </View>
             </View>
         </SafeAreaComponent>
@@ -195,5 +189,9 @@ const Styles = StyleSheet.create({
         borderRadius: 20,
         borderColor: '#5F33E1',   
         justifyContent: 'center'    
+    },
+    collapsible: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })

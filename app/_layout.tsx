@@ -21,6 +21,7 @@ export default function RootLayout() {
         <Stack.Screen name="Login/index"options={{ headerShown: false }}/>
         <Stack.Screen name="Home/ListTask" options={{ headerShown: false }}/>
         <Stack.Screen name="Home/AddTask" options={{ headerShown: false }}/>
+        <Stack.Screen name="Home/[idTask]" options={{ headerShown: false }}/>
       </Stack>
       <StatusBar style="auto" />
       <Spinner
