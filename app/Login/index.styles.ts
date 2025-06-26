@@ -5,8 +5,6 @@ const StyleLogin = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'flex-end',
-        borderColor: 'red',
-        borderWidth: 1,
     },
     inputForm: {
         height: 60,

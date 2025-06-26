@@ -5,18 +5,21 @@ type ButtonCustomProps = {
     onPressFunction: () => void;
     image?: object
     styleButton?: object
+    buttonWhite?: boolean
 }
 
 export default function ButtonCustom(props: ButtonCustomProps){
     return(
         <ImageBackground 
-            source={require('../../assets/Button.png')}
+            source={props.buttonWhite ? require('../../assets/buttonWhite.png') : require('../../assets/Button.png')}
             resizeMode="contain"
             imageStyle={Style.back}
             style={[props.styleButton]}
         >
             <TouchableOpacity style={Style.touch} onPress={props.onPressFunction}>
-                <Text style={Style.text}>{props.title}</Text>
+                <Text style={[Style.text, {
+                    color: props.buttonWhite ? '#5F33E1' : 'white'
+                }]}>{props.title}</Text>
                 {props.image && (
                     <ImageBackground 
                         source={props.image }
@@ -37,7 +40,6 @@ const Style = StyleSheet.create({
         alignItems: 'center',
     },
     text: {
-        color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
         textAlign: 'center',

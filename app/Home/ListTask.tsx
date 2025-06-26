@@ -167,7 +167,7 @@ export default function HomePage(){
                 <HeaderCustom
                     back={false}
                     title='Organizador de Tareas'
-                    isList={false}
+                    isList={true}
                 >
                     <View style={StylesListTask.containerHeader}>
                         <TextInput

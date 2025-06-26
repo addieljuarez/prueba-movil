@@ -57,7 +57,7 @@ export default function HeaderCustom(props: HeaderCustomProps){
                     />
                 </TouchableOpacity>
             </View>
-            {!props.isList && (
+            {props.isList && (
                 <>
                     <View style={Style.viewImages}>
                         <ImageBackground 
@@ -68,6 +68,17 @@ export default function HeaderCustom(props: HeaderCustomProps){
                         <ImageBackground 
                             source={require('../../assets/calendar.png')}
                             style={Style.imagesCenter}
+                            resizeMode="contain"
+                        />
+                    </View>
+                </>
+            )}
+            {!props.isList && (
+                <>
+                    <View style={Style.viewImageDetail}>
+                        <ImageBackground 
+                            source={require('../../assets/backHeader.png')}
+                            style={Style.imageDetail}
                             resizeMode="contain"
                         />
                     </View>
@@ -124,6 +135,18 @@ const Style = StyleSheet.create({
     imagesCenter: {
         width: 45,
         height: 45,
+        resizeMode: 'contain',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    viewImageDetail: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1
+    },
+    imageDetail: {
+        width: 180,
+        height: 180,
         resizeMode: 'contain',
         justifyContent: 'center',
         alignItems: 'center'
