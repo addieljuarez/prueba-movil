@@ -100,15 +100,15 @@ export default function AddTask(){
             <Collapsible collapsed={collapsed} align="center">
             
                 <TouchableOpacity style={{
-                    padding: 20,
-                    backgroundColor: '#fff',
-                    borderColor: 'red',
-                    borderWidth: 2
-                }}
-                onPress={() => {
-                    setSelectedCompleted(true)
-                    setSelectedPending(false)
-                }}
+                        padding: 20,
+                        backgroundColor: '#fff',
+                        borderColor: 'red',
+                        borderWidth: 2
+                    }}
+                    onPress={() => {
+                        setSelectedCompleted(true)
+                        setSelectedPending(false)
+                    }}
                 >
                     <Text>
                         Completada

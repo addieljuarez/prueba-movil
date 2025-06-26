@@ -241,14 +241,11 @@ export default function HomePage(){
                                         </TouchableOpacity>
                                     </View>
                                 </View>
-                                
-                                
                             </View>
                         ))
                     ) : (
                         <Text>{tasks.message}</Text>
                     )}
-                    
                 </ScrollView>
                 
                 { viewPagination && (
@@ -260,8 +257,6 @@ export default function HomePage(){
                     />
                 )}
                 
-                
-                
                 <GestureHandlerRootView style={[StylesListTask.comtainerGesture, {
                     backgroundColor: backgroundColor
                 }]}>
@@ -269,9 +264,7 @@ export default function HomePage(){
                             <BottomSheetModal
                                 ref={bottomSheetModalRef}
                                 onChange={handleSheetChanges}
-                                style={{
-                                    marginTop: 100,
-                                }}
+                                style={StylesListTask.bottomSheet}
                             >
                                 <BottomSheetView style={StylesListTask.bottomSheetView}>
                                     <ListEvenPage />

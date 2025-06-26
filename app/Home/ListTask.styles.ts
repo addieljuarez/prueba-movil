@@ -12,6 +12,7 @@ const StylesListTask = StyleSheet.create({
     },
     bottomSheetView: {
         flex: 1,
+        bottom: 5,
     },
     containerHeader: { 
         padding: 10,
@@ -80,6 +81,9 @@ const StylesListTask = StyleSheet.create({
         height: 18,
         resizeMode: 'contain',
     },
+    bottomSheet: {
+        marginTop: 50,
+    }
 })
 
 
