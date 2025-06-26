@@ -2,10 +2,12 @@ import Pagination from '@cherry-soft/react-native-basic-pagination'
 import { BottomSheetModal, BottomSheetModalProvider, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useRouter } from 'expo-router'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Button, ScrollView, Text, TextInput, View } from 'react-native'
+import { Button, ImageBackground, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import Toast from 'react-native-toast-message'
 import { getTasks } from '../API'
+import ButtonCustom from '../Components/ButtonCustom'
+import HeaderCustom from '../Components/HeaderCustom'
 import SafeAreaComponent from '../Components/SafeAreaComponent'
 import { Task } from '../Schemas/tasks'
 import { useStoreLogin, useStoreTask } from '../Stores/useStore'
@@ -42,7 +44,6 @@ export default function HomePage(){
     const setSuccess = useStoreTask(data => data.setSuccess)
     const resetState = useStoreTask(data => data.resetState)
     const setError = useStoreTask(data => data.setError)
-    // const isLoading = useStoreTask(data => data.loading)
     const success = useStoreTask(data => data.success)
     const data = useStoreTask(data => data.data)
 
@@ -146,11 +147,6 @@ export default function HomePage(){
     const addNewTask = () => {
         router.push('/Home/AddTask')
     }
-    const sigOut = () => {
-        useStoreLogin.setState({ isLoggedIn: false, user: null })
-        useStoreTask.setState({ data: [], loading: false, success: false, error: false })
-        router.replace('/Login')
-    }
 
     const handleSheetChanges = useCallback((index: number) => {
         if(index === -1){
@@ -168,75 +164,83 @@ export default function HomePage(){
     return (
         <>
             <SafeAreaComponent>
-                <View style={{ padding: 10, backgroundColor: '#f8f8f8', borderRadius: 5, marginBottom: 10 }}>
-                    <TextInput
-                        placeholder="Buscar Tareas"
-                        style={{ height: 40, borderColor: '#ccc', borderWidth: 1, paddingHorizontal: 10 }}
-                        onChangeText={onChangeSearch}
-                    />
-                    <Text style={{ fontSize: 18, fontWeight: 'bold' }}>Buscar Tareas</Text>
-                    <Button
-                        title="Agregar Tarea"
-                        onPress={addNewTask}
-                        color="#007BFF"
-                        accessibilityLabel="Agregar Tarea"
-                        testID="add-task-button"
-                    />
-                    <Button 
-                        title='Cerrar Sesión'
-                        onPress={sigOut}
-                    />
-                    <Button 
-                        title='Par o Inpar'
-                        onPress={handlePresentModalPress}
-                    />
-                </View>
-                <ScrollView style={{ flex: 1, padding: 10 }}>
+                <HeaderCustom
+                    back={false}
+                    title='Organizador de Tareas'
+                    isList={false}
+                >
+                    <View style={StylesListTask.containerHeader}>
+                        <TextInput
+                            placeholder="Buscar Tareas"
+                            style={StylesListTask.inputSearch}
+                            onChangeText={onChangeSearch}
+                        />
+                        <ButtonCustom
+                            onPressFunction={addNewTask}
+                            title='Agregar'
+                            styleButton={{top: 5}}
+                        />
+                        <TouchableOpacity onPress={handlePresentModalPress}>
+                            <ImageBackground 
+                                source={require('../../assets/even.png')}
+                                style={StylesListTask.buttonEven}
+                                resizeMode="center"
+                                
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </HeaderCustom>
+                <Text 
+                    style={StylesListTask.textTasks}
+                >
+                    {data.length} tareas registradas
+                </Text>
+                
+                <ScrollView style={StylesListTask.containerList}>
                     {success ? (
                         tasks.data.map((task: Task, index) => (
-                            <View key={index} style={{ padding: 10, borderBottomWidth: 1, borderColor: '#ccc' }}>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>ID: {task.id}</Text>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>UserId: {task.userId}</Text>
-                                <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Titulo: {task.title}</Text>
-                                <Text style={{ color: task.completed ? 'green' : 'red' }}>
-                                    {task.completed ? 'Completada' : 'Pendiente'}
-                                </Text>
-                                <Button
-                                    title="Editar"
-                                    onPress={() => router.push({
-                                        pathname: '/Home/[idTask]',
-                                        params: {
-                                            idTask: task.id
-                                        }
-                                    })}
-                                    color="#007BFF"
-                                />
-                                {/* <Link 
-                                    href={`/Home/${task.id}`}
-                                    style={{ color: '#007BFF', marginVertical: 5 }}
-                                    accessibilityLabel={`Editar Tarea ${task.id}`}
-                                    testID={`edit-task-link-${task.id}`}
-                                >
-                                    Editar
-                                </Link> */}
-                                <Button
-                                    title="Eliminar"
-                                    onPress={() => {
-                                        useStoreTask.getState().removeTask(task.id)
-                                        Toast.show({
-                                            type: 'success',
-                                            text1: 'Tarea eliminada correctamente',
-                                            position: 'top',
-                                            visibilityTime: 3000,
-                                            autoHide: true,
-                                            topOffset: 50,
-                                            bottomOffset: 40,
-                                        })
-                                    }}
-                                    color="#FF0000"
-                                    accessibilityLabel="Eliminar Tarea"
-                                    testID={`delete-task-button-${task.id}`}
-                                />
+                            <View key={index} style={StylesListTask.containerTask}>
+                                <View style={StylesListTask.containerTextButtons}>
+                                    <View style={StylesListTask.containerText}>
+                                        <Text style={{ color: task.completed ? 'green' : 'red' }}>
+                                            {task.completed ? 'Completada' : 'Pendiente'} ID: {task.id}
+                                        </Text>
+                                        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Titulo: {task.title}</Text>
+                                    </View>
+                                    
+                                    <View style={StylesListTask.containerButtons}>
+                                        <Button
+                                            title="Editar"
+                                            onPress={() => router.push({
+                                                pathname: '/Home/[idTask]',
+                                                params: {
+                                                    idTask: task.id
+                                                }
+                                            })}
+                                            color="#007BFF"
+                                        />
+                                        <Button
+                                            title="Eliminar"
+                                            onPress={() => {
+                                                useStoreTask.getState().removeTask(task.id)
+                                                Toast.show({
+                                                    type: 'success',
+                                                    text1: 'Tarea eliminada correctamente',
+                                                    position: 'top',
+                                                    visibilityTime: 3000,
+                                                    autoHide: true,
+                                                    topOffset: 50,
+                                                    bottomOffset: 40,
+                                                })
+                                            }}
+                                            color="#FF0000"
+                                            accessibilityLabel="Eliminar Tarea"
+                                            testID={`delete-task-button-${task.id}`}
+                                        />
+                                    </View>
+                                </View>
+                                
+                                
                             </View>
                         ))
                     ) : (
