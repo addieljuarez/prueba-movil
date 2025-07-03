@@ -10,13 +10,8 @@ import StyleLogin from './index.styles';
 
 export default function LoginPage() {
     const router = useRouter();
-    // const [email, setEmail] = useState('')
-    // const [password, setPassword] = useState('')
-    const [email, setEmail] = useState('user9@example.com')
-    const [password, setPassword] = useState('n3in3in3in')
-
-    // const [email, setEmail] = useState('admin@example.com')
-    // const [password, setPassword] = useState('th1s1sadm1n')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
 
     const updateLogin = useStoreLogin((state) => state.setIsLoggedIn)
