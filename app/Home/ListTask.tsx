@@ -163,120 +163,122 @@ export default function HomePage(){
     
     return (
         <>
-            <SafeAreaComponent>
-                <HeaderCustom
-                    back={false}
-                    title='Organizador de Tareas'
-                    isList={true}
-                >
-                    <View style={StylesListTask.containerHeader}>
-                        <TextInput
-                            placeholder="Buscar Tareas"
-                            style={StylesListTask.inputSearch}
-                            onChangeText={onChangeSearch}
-                        />
-                        <ButtonCustom
-                            onPressFunction={addNewTask}
-                            title='Agregar'
-                            styleButton={{top: 5}}
-                        />
-                        <TouchableOpacity onPress={handlePresentModalPress}>
-                            <ImageBackground 
-                                source={require('../../assets/even.png')}
-                                style={StylesListTask.buttonEven}
-                                resizeMode="center"
-                                
+            <GestureHandlerRootView >
+                <SafeAreaComponent>
+                    <HeaderCustom
+                        back={false}
+                        title='Organizador de Tareas'
+                        isList={true}
+                    >
+                        <View style={StylesListTask.containerHeader}>
+                            <TextInput
+                                placeholder="Buscar Tareas"
+                                style={StylesListTask.inputSearch}
+                                onChangeText={onChangeSearch}
                             />
-                        </TouchableOpacity>
-                    </View>
-                </HeaderCustom>
-                <Text 
-                    style={StylesListTask.textTasks}
-                >
-
-                    { user && user.userId === 0 ?
-                        `${totalItems} tareas registradas` :
-                        `${totalItems} tareas registradas para el usuario ${user?.email}`
-                    }
-                </Text>
-                
-                <ScrollView style={StylesListTask.containerList}>
-                    {success ? (
-                        tasks.data.map((task: Task, index) => (
-                            <View key={index} style={StylesListTask.containerTask}>
-                                <View style={StylesListTask.containerTextButtons}>
-                                    <View style={StylesListTask.containerText}>
-                                        <Text style={{ color: task.completed ? '#5F33E1' : '#9887CA' }}>
-                                            {task.completed ? 'Completada' : 'Pendiente'} (ID: {task.id})
-                                        </Text>
-                                        <Text style={StylesListTask.textTitleTask}>Titulo: {task.title}</Text>
-                                    </View>
+                            <ButtonCustom
+                                onPressFunction={addNewTask}
+                                title='Agregar'
+                                styleButton={{top: 5}}
+                            />
+                            <TouchableOpacity onPress={handlePresentModalPress}>
+                                <ImageBackground 
+                                    source={require('../../assets/even.png')}
+                                    style={StylesListTask.buttonEven}
+                                    resizeMode="center"
                                     
-                                    <View style={StylesListTask.containerButtons}>
-                                        <TouchableOpacity onPress={() => router.push({
-                                                pathname: '/Home/[idTask]',
-                                                params: {
-                                                    idTask: task.id
-                                                }
-                                            })} style={StylesListTask.buttonAction}>
-                                            <ImageBackground 
-                                                source={require('../../assets/edit.png')}
-                                                style={StylesListTask.imageButton}
-                                                resizeMode="contain"
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => {
-                                                useStoreTask.getState().removeTask(task.id)
-                                                Toast.show({
-                                                    type: 'success',
-                                                    text1: 'Tarea eliminada correctamente',
-                                                    position: 'top',
-                                                    visibilityTime: 3000,
-                                                    autoHide: true,
-                                                    topOffset: 50,
-                                                    bottomOffset: 40,
-                                                })
-                                            }} style={StylesListTask.buttonAction}>
-                                            <ImageBackground 
-                                                source={require('../../assets/trash.png')}
-                                                style={StylesListTask.imageButton}
-                                                resizeMode="contain"
-                                            />
-                                        </TouchableOpacity>
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </HeaderCustom>
+                    <Text 
+                        style={StylesListTask.textTasks}
+                    >
+
+                        { user && user.userId === 0 ?
+                            `${totalItems} tareas registradas` :
+                            `${totalItems} tareas registradas para el usuario ${user?.email}`
+                        }
+                    </Text>
+                    
+                    <ScrollView style={StylesListTask.containerList}>
+                        {success ? (
+                            tasks.data.map((task: Task, index) => (
+                                <View key={index} style={StylesListTask.containerTask}>
+                                    <View style={StylesListTask.containerTextButtons}>
+                                        <View style={StylesListTask.containerText}>
+                                            <Text style={{ color: task.completed ? '#5F33E1' : '#9887CA' }}>
+                                                {task.completed ? 'Completada' : 'Pendiente'} (ID: {task.id})
+                                            </Text>
+                                            <Text style={StylesListTask.textTitleTask}>Titulo: {task.title}</Text>
+                                        </View>
+                                        
+                                        <View style={StylesListTask.containerButtons}>
+                                            <TouchableOpacity onPress={() => router.push({
+                                                    pathname: '/Home/[idTask]',
+                                                    params: {
+                                                        idTask: task.id
+                                                    }
+                                                })} style={StylesListTask.buttonAction}>
+                                                <ImageBackground 
+                                                    source={require('../../assets/edit.png')}
+                                                    style={StylesListTask.imageButton}
+                                                    resizeMode="contain"
+                                                />
+                                            </TouchableOpacity>
+                                            <TouchableOpacity onPress={() => {
+                                                    useStoreTask.getState().removeTask(task.id)
+                                                    Toast.show({
+                                                        type: 'success',
+                                                        text1: 'Tarea eliminada correctamente',
+                                                        position: 'top',
+                                                        visibilityTime: 3000,
+                                                        autoHide: true,
+                                                        topOffset: 50,
+                                                        bottomOffset: 40,
+                                                    })
+                                                }} style={StylesListTask.buttonAction}>
+                                                <ImageBackground 
+                                                    source={require('../../assets/trash.png')}
+                                                    style={StylesListTask.imageButton}
+                                                    resizeMode="contain"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                        ))
-                    ) : (
-                        <Text>{tasks.message}</Text>
+                            ))
+                        ) : (
+                            <Text>{tasks.message}</Text>
+                        )}
+                    </ScrollView>
+                    
+                    { viewPagination && (
+                        <Pagination
+                            totalItems={totalItems}
+                            pageSize={itemsToPage}
+                            currentPage={page}
+                            onPageChange={setPage}
+                        />
                     )}
-                </ScrollView>
-                
-                { viewPagination && (
-                    <Pagination
-                        totalItems={totalItems}
-                        pageSize={itemsToPage}
-                        currentPage={page}
-                        onPageChange={setPage}
-                    />
-                )}
-                
-                <GestureHandlerRootView style={[StylesListTask.comtainerGesture, {
-                    backgroundColor: backgroundColor
-                }]}>
-                        <BottomSheetModalProvider>
-                            <BottomSheetModal
-                                ref={bottomSheetModalRef}
-                                onChange={handleSheetChanges}
-                                style={StylesListTask.bottomSheet}
-                            >
-                                <BottomSheetView style={StylesListTask.bottomSheetView}>
-                                    <ListEvenPage />
-                                </BottomSheetView>
-                            </BottomSheetModal>
-                        </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-            </SafeAreaComponent>
+                    
+                    <View style={[StylesListTask.comtainerGesture, {
+                        backgroundColor: backgroundColor
+                    }]}>
+                            <BottomSheetModalProvider>
+                                <BottomSheetModal
+                                    ref={bottomSheetModalRef}
+                                    onChange={handleSheetChanges}
+                                    style={StylesListTask.bottomSheet}
+                                >
+                                    <BottomSheetView style={StylesListTask.bottomSheetView}>
+                                        <ListEvenPage />
+                                    </BottomSheetView>
+                                </BottomSheetModal>
+                            </BottomSheetModalProvider>
+                        </View>
+                </SafeAreaComponent>
+            </GestureHandlerRootView>
         </>
     )
 }
