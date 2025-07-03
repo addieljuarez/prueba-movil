@@ -88,12 +88,6 @@ export default function ListEvenPage(props) {
                 </View>
                 <ScrollView>
                     <ViewEven />
-                    {/* ViewEven
-                    {even ? (
-                        <ViewEven />
-                    ) : (
-                        <ViewOdd />
-                    )} */}
                 </ScrollView>
                 
             </View>
