@@ -19,7 +19,7 @@ import StylesListTask from './ListTask.styles'
 export default function HomePage(){
 
     const router = useRouter();
-    const limitTask = 52
+    const limitTask = 50
     const itemsToPage = 10
     const user = useStoreLogin(state => state?.user)
     const [tasks, setTasks] = useState({
@@ -75,7 +75,7 @@ export default function HomePage(){
 
 
     useEffect(() => {
-        if(data.length > 0) {
+        if(data?.length > 0) {
             const dataUser = data.filter((task: Task) => task.userId === user?.userId)
             setTotalItems(user && user.userId === 0 ? data.length : dataUser.length)
             setTasks({
@@ -193,7 +193,11 @@ export default function HomePage(){
                 <Text 
                     style={StylesListTask.textTasks}
                 >
-                    {data?.length} tareas registradas
+
+                    { user && user.userId === 0 ?
+                        `${totalItems} tareas registradas` :
+                        `${totalItems} tareas registradas para el usuario ${user?.email}`
+                    }
                 </Text>
                 
                 <ScrollView style={StylesListTask.containerList}>
