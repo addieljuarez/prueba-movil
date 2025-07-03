@@ -272,7 +272,7 @@ export default function HomePage(){
                                     style={StylesListTask.bottomSheet}
                                 >
                                     <BottomSheetView style={StylesListTask.bottomSheetView}>
-                                        <ListEvenPage />
+                                        <ListEvenPage data={data} user={user}/>
                                     </BottomSheetView>
                                 </BottomSheetModal>
                             </BottomSheetModalProvider>
