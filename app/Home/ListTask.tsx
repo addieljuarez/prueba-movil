@@ -21,7 +21,7 @@ export default function HomePage(){
     const router = useRouter();
     const limitTask = 52
     const itemsToPage = 10
-    const user = useStoreLogin(state => state.user)
+    const user = useStoreLogin(state => state?.user)
     const [tasks, setTasks] = useState({
         success: false,
         data: [],
@@ -193,7 +193,7 @@ export default function HomePage(){
                 <Text 
                     style={StylesListTask.textTasks}
                 >
-                    {data.length} tareas registradas
+                    {data?.length} tareas registradas
                 </Text>
                 
                 <ScrollView style={StylesListTask.containerList}>
